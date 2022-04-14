@@ -8,7 +8,7 @@ const {
   requireToBeLoggedOut,
 } = require("../middlewares/IsLoggedIn");
 
-router.get("/home", async (req, res, next) => {
+router.get("/home", isLoggedIn, async (req, res, next) => {
   try {
     const popularity = await axios.get(
       "https://kitsu.io/api/edge/anime?sort=popularityRank;page[limit]=20"
@@ -93,7 +93,7 @@ router.post("/saveFavoriteAnime", async (req, res) => {
   }
 });
 
-router.get("/showfavoriteAnimes", async (req, res) => {
+router.get("/showfavoriteAnimes", isLoggedIn, async (req, res) => {
   const userId = req.session.user._id;
   const user = await User.findById(userId).populate("favoriteAnimes");
   showFavorites = user.favoriteAnimes;
